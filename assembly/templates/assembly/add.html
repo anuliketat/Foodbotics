@@ -15,39 +15,107 @@
         </div>
     </form>
 
-    <form method="post" action="/add/" class="form-group">
+    <!-- <form method="post" action="/add/" class="form-group">
         {% csrf_token %}
         <div id="forms">
             {{form2}}
             <button id="add-another" class="btn btn-link btn-sm" type="submit">Add Tasks</button>
         </div>
-    </form>
+    </form> -->
 
     <form class="form-group" method="post" action="">
         {% csrf_token %}
         {{ formset.management_form }}
-        {% for form in formset %}
             <div class="form-row align-items-center">
-
-                <div class="">
-                    <div class="input-group">
+                <div id="form_set">
+                    {% for form in formset.forms %}
+                    <div class="input-group tasks-form-row">
                         <h4>
-                            <small class="text-muted">Task - {{forloop.counter }}</small>
+                           <small id="task_counter-1" class="text-muted">Task - {{ forloop.counter }}</small>
                         </h4>
                         {{form.as_p}}
                         <div class="col-auto">
-                            <button class="btn btn-success btn-sm add-form-row mb-2">+</button>
+                            <button type="button" class="btn btn-success btn-sm add-form-row mb-2">+</button>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
-        {% endfor %}
+        <div id="empty_form" style="display:none">
+            <div class="input-group tasks-form-row-empty">
+                <h4>
+                   <small id="task_counter-form-__prefix__" class="task-counter text-muted">Task - __prefix__</small>
+                </h4>
+                {{formset.empty_form.as_p}}
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success btn-sm add-form-row mb-2">+</button>
+                </div>
+            </div>
+        </div>
+
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script type="text/javascript" src="/static/assembly/js/form_row.js"></script>
-    </form>
-    <br>
+        <script>
+            function updateElementIndex(el, prefix, ndx) {
+                var id_regex = new RegExp('(' + prefix + '-\\d+)');
+                var replacement = prefix + '-' + ndx;
+                if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+                if (el.id) el.id = el.id.replace(id_regex, replacement);
+                if (el.name) el.name = el.name.replace(id_regex, replacement);
+            }
+
+            function deleteForm(prefix, btn) {
+                var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+                if (total > 1){
+                    btn.closest('.tasks-form-row').remove();
+                    var forms = $('.tasks-form-row');
+                    $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+                    for (var i=0, formCount=forms.length; i<formCount; i++) {
+                        $(forms.get(i)).find(':input').each(function() {
+                            updateElementIndex(this, prefix, i);
+                        });
+                        $(forms.get(i)).find('.task-counter').each(function () {
+                            const elem = $(this);
+                            elem.html(`Task - ${i + 1}`);
+                        });
+                    }
+                }
+                return false;
+            }
+
+            function addForm() {
+                var form_idx = parseInt($('#id_form-TOTAL_FORMS').val());
+                const emptyRow = $('#empty_form').clone();
+                emptyRow.children().removeClass('tasks-form-row').addClass('tasks-form-row');
+                $('#form_set').append(emptyRow.html().replace(/__prefix__/g, form_idx+1))
+                .ready(function () {
+                    var conditionRow = $('.tasks-form-row:not(:last)');
+                    conditionRow.map(console.log)
+                    conditionRow.find('.btn.add-form-row')
+                        .removeClass('btn-success').addClass('btn-danger')
+                        .removeClass('add-form-row').addClass('remove-form-row')
+                        .html('-');
+                    $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+                });
+            }
+            
+            $(document).on('click', '.add-form-row', function (e) {
+                e.preventDefault();
+                addForm();
+                return false;
+            });
+
+            $(document).on('click', '.remove-form-row', function (e) {
+                e.preventDefault();
+                deleteForm('form', $(this));
+                return false;
+            });
+    </script>
     <div class="input-group">
         <button type="submit", name="save" value="save" class="btn btn-outline-primary btn-block">Add Item</button>
     </div>
+    </form>
+    <br>
+    
     {% endblock %}
 </html>
