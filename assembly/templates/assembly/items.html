@@ -1,0 +1,33 @@
+{% extends 'assembly/base.html' %}
+
+<html>
+    <head>
+        {% block title %}Items List{% endblock %}
+    </head>
+    <body>
+        {% block content %}
+            <h3>List of Items with Profiles</h3>
+            <br>
+            <div class="list-group list-group-horizontal-sm">
+                {% for item in name %}
+                <div class="col-4">
+                    <div class="shadow-sm p-3 mb-5 bg-white rounded" style="width: 15rem;">
+                        <div class="card-body">
+                            <h5 class="card-title"> {{item}} </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{item.cuisine}}</h6>
+                            <p class="card-text">Info</p>
+                            <a href="#" class="card-link">Task Graph</a>
+                            <a href="#" class="card-link">View</a>
+                            <!--<a tabindex="0" class="card-link" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Lolo</a>-->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="input-group">
+                <a type="submit", name="save" href="{% url 'add_item' %}" class="btn btn-primary">Add Item</a>
+            </div>
+        {% endblock %}
+    </body>
+</html>

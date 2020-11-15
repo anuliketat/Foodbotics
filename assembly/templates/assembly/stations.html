@@ -1,0 +1,38 @@
+{% extends 'assembly/base.html' %}
+
+<head>
+    {% block title %}Work Stations{% endblock %}
+</head>
+<body>
+    {% block content %}
+        <div class="list-group">
+            <div id="accordion">
+            {% for key, value in name.items %}
+                <!--div class="card"> -->
+                    <div class="card-header bg-white" id="headingOne{{ key.id }}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne{{ key.id }}"
+                                aria-expanded="false" aria-controls="collapseOne">
+                                {{key}}
+                                <span class="badge badge-dark badge-pill">{{value|length}}</span>
+                            </button>
+                        </h5>
+                    </div>
+                    {% for val in value %}
+                        <div id="collapseOne{{ key.id }}" class="collapse" aria-labelledby="headingOne{{ key.id }}"
+                            data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="list-group list-group-horizontal-sm">
+                                    <ul>
+                                        <li href="#" class="list">{{val}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                <!--</div>-->
+            {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
+</body>
