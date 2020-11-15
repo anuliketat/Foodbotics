@@ -57,8 +57,9 @@ def add_item(response):
             i.save()
         if form_set.is_valid():
             for form in form_set:
-                task = form.cleaned_data["source_station"]
-                if task:
+                print(form.cleaned_data)
+                task = form.cleaned_data.get('source_station', None)
+                if task is not None:
                     #ItemProfile(stations=name).save()
                     print(task)
     else:

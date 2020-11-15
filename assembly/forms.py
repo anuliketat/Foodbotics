@@ -37,7 +37,7 @@ class AddItemTasks(forms.Form):
         #cleaned_data = super().clean()
         #station_data = cleaned_data.get("station")
 
-ItemFormset = formset_factory(AddItemTasks, extra=1)
+ItemFormset = formset_factory(AddItemTasks)
 
 
 
